@@ -1,19 +1,81 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Block Dodger</title>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Kestrel City · Night Shift</title>
 <style>
-  html, body { margin: 0; height: 100%; overflow: hidden; background: #11141b; }
-  #game { position: fixed; inset: 0; width: 100%; height: 100%; display: block; touch-action: none; }
-  /* Read aloud, never shown: the status line screen readers announce. */
-  #status { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+  :root { --ink:#e8eef8; --muted:#8fa1bd; --gold:#ffcf4a; --line:rgba(140,190,255,.22); }
+  * { box-sizing:border-box; }
+  html,body { margin:0; height:100%; background:#04070d; color:var(--ink); overflow:hidden;
+    font-family:"Segoe UI",system-ui,sans-serif; }
+  body { display:grid; place-items:center; }
+  .frame { position:relative; width:min(100vw,calc(100vh * 16 / 9)); aspect-ratio:16/9; max-height:100vh;
+    overflow:hidden; box-shadow:0 0 120px rgba(40,120,255,.12); }
+  canvas#game { display:block; width:100%; height:100%; background:#04070d; outline:none; }
+  #title { position:absolute; inset:0; display:grid; grid-template-rows:1fr auto;
+    padding:clamp(18px,4vw,54px); transition:opacity .22s ease;
+    background:radial-gradient(120% 90% at 70% 8%,rgba(255,61,110,.22),transparent 55%),
+      radial-gradient(90% 80% at 18% 92%,rgba(40,215,255,.16),transparent 60%),
+      linear-gradient(180deg,rgba(3,6,12,.72),rgba(3,6,12,.93)); }
+  #title.hidden { opacity:0; pointer-events:none; }
+  .headline { align-self:center; max-width:760px; }
+  .eyebrow { letter-spacing:.42em; font-size:clamp(9px,1vw,12px); color:var(--gold);
+    text-transform:uppercase; margin-bottom:14px; }
+  h1 { margin:0; font-family:"Arial Black","Segoe UI",system-ui,sans-serif;
+    font-size:clamp(46px,8.4vw,108px); line-height:.9; letter-spacing:-.02em;
+    text-transform:uppercase; text-shadow:0 0 34px rgba(255,61,110,.34); }
+  h1 span { color:var(--gold); }
+  .sub { margin-top:16px; font-size:clamp(12px,1.3vw,16px); line-height:1.55; color:var(--muted);
+    max-width:520px; }
+  .sub b { color:var(--ink); font-weight:600; }
+  .actions { display:flex; align-items:center; gap:14px; margin-top:28px; flex-wrap:wrap; }
+  button { font:800 13px/1 "Segoe UI",system-ui,sans-serif; letter-spacing:.16em;
+    text-transform:uppercase; padding:15px 26px; border-radius:4px; cursor:pointer;
+    border:1px solid rgba(255,207,74,.6); color:#10131a;
+    background:linear-gradient(180deg,rgba(255,207,74,.95),rgba(216,158,28,.95)); }
+  button:hover { filter:brightness(1.08); transform:translateY(-1px); }
+  button.ghost { background:rgba(10,16,27,.7); border-color:var(--line); color:var(--ink); }
+  .foot { display:flex; justify-content:space-between; align-items:flex-end; gap:24px;
+    flex-wrap:wrap; border-top:1px solid var(--line); padding-top:16px; }
+  .controls { display:grid; grid-template-columns:repeat(4,minmax(110px,auto)); gap:6px 22px;
+    font-size:11px; color:var(--muted); letter-spacing:.04em; }
+  .controls b { color:var(--ink); }
+  .tag { font-size:10px; letter-spacing:.22em; color:rgba(143,161,189,.8);
+    text-transform:uppercase; text-align:right; }
+  @media (max-width:720px) { .controls { grid-template-columns:repeat(2,minmax(110px,auto)); } }
 </style>
 </head>
 <body>
-<canvas id="game" aria-label="Block Dodger: move the paddle left and right to dodge falling blocks and catch coins"></canvas>
-<p id="status" role="status" aria-live="polite"></p>
-<script type="module" src="./src/main.js"></script>
+  <div class="frame">
+    <canvas id="game" width="1280" height="720" tabindex="0" aria-label="Kestrel City game canvas"></canvas>
+    <div id="title">
+      <div class="headline">
+        <div class="eyebrow">Kestrel City · 21:40 · rain coming</div>
+        <h1>Night<br /><span>Shift</span></h1>
+        <p class="sub">One gold coupé, one marina, one very angry police department.
+          <b>Steal the car, make the drop, lose the heat.</b> The city is five blocks wide and
+          not nearly big enough for the both of you.</p>
+        <div class="actions">
+          <button id="play">Play</button>
+          <button id="continue" class="ghost" style="display:none">Continue</button>
+        </div>
+      </div>
+      <div class="foot">
+        <div class="controls">
+          <div><b>WASD</b> move / drive</div>
+          <div><b>Shift</b> run / brake</div>
+          <div><b>E</b> enter / exit car</div>
+          <div><b>Mouse</b> aim · <b>Space</b> fire</div>
+          <div><b>R</b> reload · <b>1 2 3</b> weapons</div>
+          <div><b>J</b> start contract</div>
+          <div><b>Esc</b> pause · <b>N</b> mute</div>
+          <div><b>K / L</b> save / load</div>
+        </div>
+        <div class="tag" id="build">Kestrel City</div>
+      </div>
+    </div>
+  </div>
+  <script type="module" src="./src/main.js"></script>
 </body>
 </html>
